@@ -1,0 +1,27 @@
+{
+	"compilerOptions": {
+		"module": "commonjs",
+		"target": "es6",
+		"sourceMap": true,
+		"outDir": "./app/",
+		"lib": [
+			"es6"
+    ],
+    "noUnusedLocals": false,
+		"experimentalDecorators": true,
+		"emitDecoratorMetadata": true,
+		"moduleResolution": "node",
+		"baseUrl": "./",
+    "noImplicitAny": false,
+    "skipLibCheck": true,
+		"paths": {
+			"*": [
+				"types/*"
+			]
+		}
+	},
+	"include": [
+		"./src/**/*.ts"
+	],
+  "exclude": [ "node_modules", "**/*.spec.ts" ]
+}
