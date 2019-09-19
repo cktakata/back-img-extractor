@@ -2,13 +2,10 @@ import { Module, MiddlewareConsumer } from '@nestjs/common';
 import { CadUserCORSMiddleware } from './cors.middleware';
 import { HealthCheckerService } from './server/health-checker/health-checker.service';
 import { HealthCheckerController } from './server/health-checker/health-checker.controller';
-import { CadastroModule } from './module/cadastro.module';
-import { JwtModule } from '@nestjs/jwt';
+import { CadastroModule } from './module/cadastro/cadastro.module';
 
 @Module({
-    imports: [CadastroModule, JwtModule.register({
-        secretOrPrivateKey: 'YWNob3UgcXVlIGV1IGVzdGF2YSBicmluY2FuZG8gPwo='
-    })],
+    imports: [CadastroModule],
     controllers: [HealthCheckerController],
     providers: [HealthCheckerService],
 })

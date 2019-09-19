@@ -1,5 +1,5 @@
-import { Controller, Post, Get, Res, HttpStatus, Body, Param, NotFoundException, HttpCode } from '@nestjs/common';
-import { Response } from 'express';
+import { Controller, Post, Get, Res, HttpStatus, Body, Param, NotFoundException, HttpCode, Req } from '@nestjs/common';
+import { Response, Request } from 'express';
 import { HttpResponse } from '../../utils/http.response';
 import { Status } from '../../utils/status.entity';
 import { CadastroService } from './cadastro.service';
@@ -14,12 +14,18 @@ export class CadastroController {
     public async registrar(@Res() res: Response, @Body() filter: UserArgs): Promise<Response> {
         let data;
         try {
-            data = this.service.registrar(filter);
+            data = await this.service.registrar(filter);
             return res.status(HttpStatus.OK).json(
-                new HttpResponse(new Status(0), data));
+                new HttpResponse(new Status(HttpStatus.OK), data));
         } catch (err) {
-            return res.status(err).json(
-                new HttpResponse(new Status(0), data));
+            switch(err.code) {
+                case 11000:
+                    return res.status(HttpStatus.INTERNAL_SERVER_ERROR).json(
+                        new HttpResponse(new Status(HttpStatus.INTERNAL_SERVER_ERROR), 'E-mail já existente.'));
+                default:
+                    return res.status(HttpStatus.INTERNAL_SERVER_ERROR).json(
+                        new HttpResponse(new Status(HttpStatus.INTERNAL_SERVER_ERROR), err.errmsg));
+            }
         }
     }
 
@@ -27,25 +33,42 @@ export class CadastroController {
     public async logar(@Res() res: Response, @Body() filter: UserLogin): Promise<Response> {
         let data;
         try {
-            data = this.service.logar(filter);
+            data = await this.service.logar(filter);
             return res.status(HttpStatus.OK).json(
-                new HttpResponse(new Status(0), data));
+                new HttpResponse(new Status(HttpStatus.OK), data));
         } catch (err) {
-            return res.status(err).json(
-                new HttpResponse(new Status(0), data));
+            switch(err.code) {
+                case 401:
+                    return res.status(HttpStatus.UNAUTHORIZED).json(
+                        new HttpResponse(new Status(HttpStatus.UNAUTHORIZED), err.errmsg));
+                default:
+                    return res.status(HttpStatus.INTERNAL_SERVER_ERROR).json(
+                        new HttpResponse(new Status(HttpStatus.INTERNAL_SERVER_ERROR), err.errmsg));
+            }
         }
     }
 
     @Get('search/:userid')
-    public async buscar(@Res() res: Response, @Param() params): Promise<Response> {
+    public async buscar(@Req() req: Request, @Res() res: Response, @Param() params): Promise<Response> {
         let data;
         try {
-            data = this.service.buscar(params);
+            const authorization = req.get('Authorization');
+            if(!authorization) {
+                return res.status(HttpStatus.UNAUTHORIZED).json(
+                    new HttpResponse(new Status(HttpStatus.UNAUTHORIZED), 'Não autorizado'));
+            }
+            data = await this.service.buscar({...params, token: authorization});
             return res.status(HttpStatus.OK).json(
                 new HttpResponse(new Status(0), data));
         } catch (err) {
-            return res.status(err).json(
-                new HttpResponse(new Status(0), data));
+            switch(err.code) {
+                case 401:
+                    return res.status(HttpStatus.UNAUTHORIZED).json(
+                        new HttpResponse(new Status(HttpStatus.UNAUTHORIZED), err.errmsg));
+                default:
+                    return res.status(HttpStatus.INTERNAL_SERVER_ERROR).json(
+                        new HttpResponse(new Status(HttpStatus.INTERNAL_SERVER_ERROR), err.errmsg));
+            }
         }
     }
 

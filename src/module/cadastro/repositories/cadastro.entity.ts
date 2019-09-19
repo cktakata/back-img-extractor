@@ -22,6 +22,6 @@ export interface UserLogin {
 }
 
 export interface UserSearch {
-    id: string;
+    userid: string;
     token: string;
 }

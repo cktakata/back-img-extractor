@@ -2,8 +2,9 @@ import { model, Schema } from "mongoose";
 
 const UsuarioSchema = new Schema(
   {
+    userid: { type: String, required: true, index: true, unique: true },
     nome: { type: String, required: true },
-    email: { type: String, required: true },
+    email: { type: String, required: true, index: true, unique: true },
     senha: { type: String, required: true },
     telefones: { type: Array },
     data_criacao: { type: Date, default: Date.now },
@@ -20,9 +21,9 @@ const UsuarioSchema = new Schema(
 UsuarioSchema.pre("save", next => {
   const now = new Date();
   if (!this.data_criacao) {
-    this.data_criacao = now.getUTCDate();
+    this.data_criacao = now;
   }
-  this.data_atualizacao = now.getUTCDate();
+  this.data_atualizacao = now;
   next();
 });
 
