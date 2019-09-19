@@ -1,23 +1,13 @@
-# ${1:Cadastro de usuários}
-TODO: Write a project description
-## Installation
-TODO: Describe the installation process
-## Usage
+# Cadastro de usuários
+Projeto de implementação de cadastro de usuários, usando as seguintes bibliotecas:
+- NestJS;
+- JWT;
+- Mongoose;
+## Instalação
+```npm i```
+## Uso
 
-http://localhost:8080/cad-user/health
-http://localhost:8080/cad-user/cadastro/buscar
+```http://localhost:8080/cad-user/health```
+```http://localhost:8080/cad-user/cadastro/search/:id```
 
-npm run pretest -- --fix
-
-## Contributing
-1. Fork it!
-2. Create your feature branch: `git checkout -b my-new-feature`
-3. Commit your changes: `git commit -am 'Add some feature'`
-4. Push to the branch: `git push origin my-new-feature`
-5. Submit a pull request :D
-## History
-TODO: Write history
-## Credits
-TODO: Write credits
-## License
-TODO: Write license
+```npm run pretest -- --fix```

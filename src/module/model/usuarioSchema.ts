@@ -6,7 +6,10 @@ const UsuarioSchema = new Schema(
     email: { type: String, required: true },
     senha: { type: String, required: true },
     telefones: { type: Array },
-    signupDate: { type: Date, default: Date.now }
+    data_criacao: { type: Date, default: Date.now },
+    data_atualizacao: { type: Date, default: Date.now },
+    ultimo_login: { type: Date, default: Date.now },
+    token: { type: String },
   },
   {
     strict: true,
@@ -16,9 +19,10 @@ const UsuarioSchema = new Schema(
 
 UsuarioSchema.pre("save", next => {
   const now = new Date();
-  if (!this.signupDate) {
-    this.signupDate = now.getUTCDate;
+  if (!this.data_criacao) {
+    this.data_criacao = now.getUTCDate();
   }
+  this.data_atualizacao = now.getUTCDate();
   next();
 });
 

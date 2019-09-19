@@ -1,45 +1,52 @@
-import { Controller, Post, Get, Res, HttpStatus, Body, NotFoundException, HttpCode } from '@nestjs/common';
+import { Controller, Post, Get, Res, HttpStatus, Body, Param, NotFoundException, HttpCode } from '@nestjs/common';
 import { Response } from 'express';
 import { HttpResponse } from '../../utils/http.response';
 import { Status } from '../../utils/status.entity';
 import { CadastroService } from './cadastro.service';
+import { UserArgs, UserLogin } from './repositories/cadastro.entity';
 
 @Controller('cadastro')
 export class CadastroController {
 
     constructor(private readonly service: CadastroService) { }
 
-    @Post('registrar')
-    public async registrar(@Res() res: Response, @Body() filter: any): Promise<Response> {
+    @Post('signup')
+    public async registrar(@Res() res: Response, @Body() filter: UserArgs): Promise<Response> {
         let data;
         try {
-            data = {};
-        } catch (err) {
-        }
-        return res.status(HttpStatus.OK).json(
+            data = this.service.registrar(filter);
+            return res.status(HttpStatus.OK).json(
                 new HttpResponse(new Status(0), data));
+        } catch (err) {
+            return res.status(err).json(
+                new HttpResponse(new Status(0), data));
+        }
     }
 
-    @Post('logar')
-    public async logar(@Res() res: Response, @Body() filter: any): Promise<Response> {
+    @Post('signin')
+    public async logar(@Res() res: Response, @Body() filter: UserLogin): Promise<Response> {
         let data;
         try {
-            data = {};
-        } catch (err) {
-        }
-        return res.status(HttpStatus.OK).json(
+            data = this.service.logar(filter);
+            return res.status(HttpStatus.OK).json(
                 new HttpResponse(new Status(0), data));
+        } catch (err) {
+            return res.status(err).json(
+                new HttpResponse(new Status(0), data));
+        }
     }
 
-    @Post('buscar')
-    public async buscar(@Res() res: Response, @Body() filter: any): Promise<Response> {
+    @Get('search/:userid')
+    public async buscar(@Res() res: Response, @Param() params): Promise<Response> {
         let data;
         try {
-            data = {};
-        } catch (err) {
-        }
-        return res.status(HttpStatus.OK).json(
+            data = this.service.buscar(params);
+            return res.status(HttpStatus.OK).json(
                 new HttpResponse(new Status(0), data));
+        } catch (err) {
+            return res.status(err).json(
+                new HttpResponse(new Status(0), data));
+        }
     }
 
 }
