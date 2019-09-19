@@ -11,19 +11,21 @@ Projeto de implementação de cadastro de usuários, usando as seguintes bibliot
 ```npm run dev```
 
 ### Iniciar a aplicação sem nodemon
-```npm run start````
+```npm run start```
 
 ### Testes unitários
-``npm run test````
+```npm run test```
 
 ### Coverage report
-/coverage/lcov-report/index.html
+```/coverage/lcov-report/index.html```
 
 ### Endpoints
 
 ```http://localhost:8080/cad-user/health``` => HealthCheck
+
 ```http://localhost:8080/cad-user/cadastro/signup``` => Criar novo usuário
+
 ```http://localhost:8080/cad-user/cadastro/signin``` => Logar
+
 ```http://localhost:8080/cad-user/cadastro/search/:id``` => Busca de usuário
 
-```npm run pretest -- --fix```
