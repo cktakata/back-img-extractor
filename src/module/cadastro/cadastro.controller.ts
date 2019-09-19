@@ -21,10 +21,10 @@ export class CadastroController {
             switch(err.code) {
                 case 11000:
                     return res.status(HttpStatus.INTERNAL_SERVER_ERROR).json(
-                        new HttpResponse(new Status(HttpStatus.INTERNAL_SERVER_ERROR), 'E-mail já existente.'));
+                        new HttpResponse(new Status(HttpStatus.INTERNAL_SERVER_ERROR, 'E-mail já existente.')));
                 default:
                     return res.status(HttpStatus.INTERNAL_SERVER_ERROR).json(
-                        new HttpResponse(new Status(HttpStatus.INTERNAL_SERVER_ERROR), err.errmsg));
+                        new HttpResponse(new Status(HttpStatus.INTERNAL_SERVER_ERROR, err.errmsg)));
             }
         }
     }
@@ -40,10 +40,10 @@ export class CadastroController {
             switch(err.code) {
                 case 401:
                     return res.status(HttpStatus.UNAUTHORIZED).json(
-                        new HttpResponse(new Status(HttpStatus.UNAUTHORIZED), err.errmsg));
+                        new HttpResponse(new Status(HttpStatus.UNAUTHORIZED, err.errmsg)));
                 default:
                     return res.status(HttpStatus.INTERNAL_SERVER_ERROR).json(
-                        new HttpResponse(new Status(HttpStatus.INTERNAL_SERVER_ERROR), err.errmsg));
+                        new HttpResponse(new Status(HttpStatus.INTERNAL_SERVER_ERROR, err.errmsg)));
             }
         }
     }
@@ -55,7 +55,7 @@ export class CadastroController {
             const authorization = req.get('Authorization');
             if(!authorization) {
                 return res.status(HttpStatus.UNAUTHORIZED).json(
-                    new HttpResponse(new Status(HttpStatus.UNAUTHORIZED), 'Não autorizado'));
+                    new HttpResponse(new Status(HttpStatus.UNAUTHORIZED, 'Não autorizado')));
             }
             data = await this.service.buscar({...params, token: authorization});
             return res.status(HttpStatus.OK).json(
@@ -64,10 +64,10 @@ export class CadastroController {
             switch(err.code) {
                 case 401:
                     return res.status(HttpStatus.UNAUTHORIZED).json(
-                        new HttpResponse(new Status(HttpStatus.UNAUTHORIZED), err.errmsg));
+                        new HttpResponse(new Status(HttpStatus.UNAUTHORIZED, err.errmsg)));
                 default:
                     return res.status(HttpStatus.INTERNAL_SERVER_ERROR).json(
-                        new HttpResponse(new Status(HttpStatus.INTERNAL_SERVER_ERROR), err.errmsg));
+                        new HttpResponse(new Status(HttpStatus.INTERNAL_SERVER_ERROR, err.errmsg)));
             }
         }
     }

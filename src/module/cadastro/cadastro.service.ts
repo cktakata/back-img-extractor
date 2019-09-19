@@ -1,6 +1,5 @@
 import { NotFoundException, HttpStatus, Injectable } from '@nestjs/common';
 import { IsString } from 'class-validator';
-import * as mongoose from 'mongoose';
 import { UserArgs, UserLogin, UserSearch } from './repositories/cadastro.entity';
 import { usuarioModel } from '../model/usuarioSchema';
 import { JwtService } from  '@nestjs/jwt';
@@ -10,11 +9,9 @@ import * as moment from "moment";
 @Injectable()
 export class CadastroService {
 
-    private mongo: mongoose;
     private jwtService: JwtService;
 
     constructor(jwtService: JwtService) {
-        this.mongo = mongoose;
         this.jwtService = jwtService;
     }
 
@@ -87,30 +84,36 @@ export class CadastroService {
     public async buscar(filter: UserSearch): Promise<any> | never {
         try {
             const user: any = await usuarioModel.find({'userid': { $regex: filter.userid }} ).sort({ _id: -1 }).limit(1);
-            if (`Bearer {${user[0].token}}` === filter.token) {
-                const ultimo_login = moment(user[0].ultimo_login).format('YYYYMMDDhhmmss');
-                const hora_atual = moment().subtract(30, 'minutes').format('YYYYMMDDhhmmss');
-                console.log(hora_atual)
-                console.log(ultimo_login)
-                if (parseInt(hora_atual) > parseInt(ultimo_login)) {
+            if(user.length > 0) {
+                if (`Bearer {${user[0].token}}` === filter.token) {
+                    const ultimo_login = moment(user[0].ultimo_login).format('YYYYMMDDhhmmss');
+                    const hora_atual = moment().subtract(30, 'minutes').format('YYYYMMDDhhmmss');
+                    if (parseInt(hora_atual) > parseInt(ultimo_login)) {
+                        const errObj = {
+                            code: HttpStatus.UNAUTHORIZED,
+                            errmsg: 'Sessão inválida',
+                        }
+                        return Promise.reject(errObj);
+                    } else {
+                        return Promise.resolve({
+                            'userId': user[0].userid,
+                            'data_criacao': user[0].data_criacao,
+                            'data_atualizacao': user[0].data_atualizacao,
+                            'ultimo_login': user[0].ultimo_login,
+                            'token': user[0].token,
+                        });
+                    }
+                } else {
                     const errObj = {
                         code: HttpStatus.UNAUTHORIZED,
-                        errmsg: 'Sessão inválida',
+                        errmsg: 'Não autorizado',
                     }
                     return Promise.reject(errObj);
-                } else {
-                    return Promise.resolve({
-                        'userId': user[0].userid,
-                        'data_criacao': user[0].data_criacao,
-                        'data_atualizacao': user[0].data_atualizacao,
-                        'ultimo_login': user[0].ultimo_login,
-                        'token': user[0].token,
-                    });
                 }
             } else {
                 const errObj = {
-                    code: HttpStatus.UNAUTHORIZED,
-                    errmsg: 'Não autorizado',
+                    code: HttpStatus.INTERNAL_SERVER_ERROR,
+                    errmsg: 'Usuário inexistente',
                 }
                 return Promise.reject(errObj);
             }

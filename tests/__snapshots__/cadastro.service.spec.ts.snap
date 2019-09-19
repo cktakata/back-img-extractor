@@ -1,0 +1,11 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Cadastro Service List operation cases should test logar: find query 1`] = `
+Object {
+  "email": Object {
+    "$regex": "epaminondas@gmail.com",
+  },
+}
+`;
+
+exports[`Cadastro Service List operation cases should test registrar: find query 1`] = `Object {}`;
