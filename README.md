@@ -6,6 +6,7 @@ Projeto de implementação de cadastro de usuários, usando as seguintes bibliot
 ## Instalação
 ```npm i```
 ## Uso
+A ser desenvolvido
 
 ### Iniciar a aplicação no modo desenvolvimento (nodemon)
 ```npm run dev```
