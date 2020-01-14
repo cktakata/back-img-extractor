@@ -6,14 +6,14 @@
 		"outDir": "./app/",
 		"lib": [
 			"es6"
-    ],
-    "noUnusedLocals": false,
+		],
+		"noUnusedLocals": false,
 		"experimentalDecorators": true,
 		"emitDecoratorMetadata": true,
 		"moduleResolution": "node",
 		"baseUrl": "./",
-    "noImplicitAny": false,
-    "skipLibCheck": true,
+		"noImplicitAny": false,
+		"skipLibCheck": true,
 		"paths": {
 			"*": [
 				"types/*"
@@ -23,5 +23,8 @@
 	"include": [
 		"./src/**/*.ts"
 	],
-  "exclude": [ "node_modules", "**/*.spec.ts" ]
+	"exclude": [
+		"node_modules",
+		"**/*.spec.ts"
+	]
 }

@@ -1,4 +1,4 @@
-# Cadastro de usuários
+# Extrator de imagens
 Projeto de implementação de cadastro de usuários, usando as seguintes bibliotecas:
 - NestJS;
 - JWT;

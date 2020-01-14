@@ -1,10 +1,10 @@
 {
-  "name": "caduser",
+  "name": "back-img-extractor",
   "jest": {
     "verbose": true
   },
   "version": "1.0.0",
-  "description": "Manutencao de usuarios",
+  "description": "Backend image extractor",
   "main": "index.js",
   "scripts": {
     "------- Development script -------": "",
@@ -14,7 +14,7 @@
     "------- Test script -------": "",
     "test": "jest",
     "------- PreTest script -------": "",
-    "pretest": "eslint --ignore-path .gitignore ."
+    "pretest2": "eslint --ignore-path .gitignore ."
   },
   "author": "Carlos Kenji Takata",
   "license": "ISC",
@@ -23,10 +23,16 @@
     "@nestjs/common": "5.0.1",
     "@nestjs/core": "5.0.1",
     "@nestjs/jwt": "6.1.1",
+    "@types/node": "^7.0.5",
+    "axios": "^0.19.1",
     "class-validator": "0.8.5",
+    "image-downloader": "^3.5.0",
+    "jimp": "^0.9.3",
     "moment": "^2.24.0",
     "mongoose": "5.3.2",
+    "node-image-resizer": "^1.0.0",
     "reflect-metadata": "0.1.12",
+    "resize-img": "^2.0.0",
     "ts-node": "4.1.0",
     "typescript": "^3.6.3"
   },

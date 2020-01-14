@@ -2,10 +2,10 @@ import { Module, MiddlewareConsumer } from '@nestjs/common';
 import { CadUserCORSMiddleware } from './cors.middleware';
 import { HealthCheckerService } from './server/health-checker/health-checker.service';
 import { HealthCheckerController } from './server/health-checker/health-checker.controller';
-import { CadastroModule } from './module/cadastro/cadastro.module';
+import { ImageModule } from './module/image/image.module';
 
 @Module({
-    imports: [CadastroModule],
+    imports: [ImageModule],
     controllers: [HealthCheckerController],
     providers: [HealthCheckerService],
 })
