@@ -5,6 +5,7 @@ import { JwtService } from '@nestjs/jwt';
 import * as crypto from "crypto";
 import * as moment from "moment";
 import { fork } from 'child_process';
+import { Scraper } from 'image-scraper';
 
 @Injectable()
 export class ImageService {
@@ -13,6 +14,28 @@ export class ImageService {
 
     constructor(jwtService: JwtService) {
         this.jwtService = jwtService;
+    }
+
+    public async getAllImages(URL: string) {
+        try {
+            const puppeteer = require('puppeteer');
+            const browser = await puppeteer.launch({ headless: true });
+            const page = await browser.newPage();
+            await page.setViewport({ width: 1920, height: 926 });
+            await page.goto(URL);
+            console.log("Scrapping images from: ", URL);
+            const images = await page.evaluate(() => Array.from(document.images, e => e.src));
+            await browser.close();
+            console.log("Found " + images.length + " images");
+            images.forEach(img => {
+                this.saveImage(img, async (rtn: { status: string }) => {
+                    console.log(rtn)
+                });
+            })
+            return { status: 'ok' };
+        } catch (e) {
+            return { status: e.errmsg };
+        }
     }
 
     public async saveImage(imageURL: string, callback: Function) {

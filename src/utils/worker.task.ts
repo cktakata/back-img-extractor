@@ -1,5 +1,3 @@
-import { resizer } from 'node-image-resizer';
-var Jimp = require('jimp');
 
 export class WorkerTask {
 
@@ -43,31 +41,13 @@ export class WorkerTask {
         try {
             const download = require('image-downloader');
             const { filename, image } = await download.image(options)
-            return await this.redimensionar2(filename);
+            return await this.redimensionar(filename);
         } catch (e) {
             console.error(e)
         }
     }
 
     private async redimensionar(filename: string) {
-        const thumb = filename.split('.')[0] + '_thumb.' + filename.split('.')[1];
-        Jimp.read(filename)
-            .then(thumbfile => {
-                thumbfile
-                    .resize(256, 256) // resize
-                    .quality(60) // set JPEG quality
-                    .write(thumb); // save
-            })
-            .catch(err => {
-                console.error(err);
-            });
-        return {
-            filename: filename.split('/')[filename.split('/').length - 1],
-            thumbnail: thumb.split('/')[thumb.split('/').length - 1]
-        };
-    }
-
-    private async redimensionar2(filename: string) {
         const fs = require('fs-extra');
         const resizeImg = require('resize-img');
         const thumb = filename.split('.')[0] + '_thumb.' + filename.split('.')[1];
