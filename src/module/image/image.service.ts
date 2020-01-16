@@ -61,8 +61,13 @@ export class ImageService {
                         resolve(obj);
                     } catch (e) {
                         // Dupe image, get data from database
+                        console.log(e.errmsg)
                         const image = await imageModel.findOne({ 'hash': hash });
-                        obj = { status: 'ok', filename: image.filename, thumb: image.thumb };
+                        if (image) {
+                            obj = { status: 'ok', filename: image.filename, thumb: image.thumb };
+                        } else {
+                            obj = { status: 'nok', filename: '', thumb: '' };
+                        }
                         resolve(obj);
                     }
                 });

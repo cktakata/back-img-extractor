@@ -3,26 +3,6 @@ export class WorkerTask {
 
     private imageUrl: string;
     private destFolder: string;
-    private setup = {
-        all: {
-            path: './thumbnails/',
-            quality: 80
-        },
-        versions: [{
-            prefix: 'big_',
-            width: 1024,
-            height: 768
-        }, {
-            prefix: 'medium_',
-            width: 512,
-            height: 256
-        }, {
-            quality: 100,
-            prefix: 'small_',
-            width: 128,
-            height: 64
-        }]
-    };
 
     constructor(imageUrl: string, destFolder?: string) {
         this.imageUrl = imageUrl;
@@ -44,6 +24,7 @@ export class WorkerTask {
             return await this.redimensionar(filename);
         } catch (e) {
             console.error(e)
+            return null
         }
     }
 
@@ -65,6 +46,12 @@ export class WorkerTask {
         } catch (e) {
             console.log(filename);
             console.log(e);
+            const thumb = filename.split('.')[0] + '_thumb.' + filename.split('.')[1];
+            return {
+                filename: filename.split('/')[filename.split('/').length - 1],
+                thumbnail: thumb.split('/')[thumb.split('/').length - 1],
+                thumbdata: ''
+            }
         }
     }
 }
