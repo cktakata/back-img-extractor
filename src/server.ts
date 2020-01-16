@@ -5,6 +5,11 @@ import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { join } from 'path';
 
+// var express = require('express');
+// var app = express();
+// var wss = app.listen(8081)
+// var io = require('socket.io').listen(wss);
+
 export class server {
 
     private PORT: number;
@@ -22,13 +27,15 @@ export class server {
     private async config() {
         const app = await NestFactory.create(AppModule);
         app.setGlobalPrefix('image');
-        app.useStaticAssets(join(__dirname, '..', 'static'));
+        // app.useStaticAssets(join(__dirname, '..', 'static'));
         await app.init();
+
         app.use(cors({
             origin: '*',
-            exposedHeaders: ['x-uid', 'x-access-token', 'x-access-token-type', 'x-access-token-expiry', 'x-pvd-wt', 'x-component-version'],
+            // exposedHeaders: ['x-uid', 'x-access-token', 'x-access-token-type', 'x-access-token-expiry', 'x-pvd-wt', 'x-component-version'],
             methods: ['post', 'get', 'options'],
         }));
+
         app.listen(this.PORT, async () => {
             await mongoose.connect(
                 this.DBURI + '?authSource=admin&w=1',

@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { imageModel } from '../model/imageSchema';
 import * as crypto from "crypto";
 import { fork } from 'child_process';
+const util = require('util');
 
 @Injectable()
 export class ImageService {
@@ -22,45 +23,56 @@ export class ImageService {
             console.log("Found " + images.length + " images");
             const data = [];
             for (const img of images) {
-                await this.saveImage(img, async (rtn: { status: string, filename: string, thumb: string }) => {
-                    // Here we will broadcast thumbnail using sockets 
-                    console.log(rtn.filename);
-                    data.push(rtn.filename);
-                });
+                const rtn = await this.saveImage(img);
+                console.log(rtn['filename']);
+                data.push(rtn);
             }
-            return { status: 'ok' };
+            return { status: 'ok', data };
         } catch (e) {
             return { status: e.errmsg };
         }
     }
 
-    public async saveImage(imageURL: string, callback: Function): Promise<any> {
-        const child = fork(
-            __dirname + '../../../utils/fork.task.ts'
-            , [imageURL]
-            , {
-                execArgv: ['-r', 'ts-node/register']
+    public async saveImage(imageURL: string) {
+        let obj = {};
+        const execution = await new Promise(
+            async function (resolve, reject) {
+                const child = fork(
+                    __dirname + '../../../utils/fork.task.ts'
+                    , [imageURL]
+                    , {
+                        execArgv: ['-r', 'ts-node/register']
+                    }
+                )
+                child.on('message', async function (m) {
+                    // Receive results from child process
+                    // console.log('Filename: ' + m.filename);
+                    // console.log('Thumbnail: ' + m.thumbnail);
+                    const hash = crypto.createHmac('sha512', imageURL).digest('hex');
+                    // console.log(hash)
+                    try {
+                        await new imageModel({
+                            hash: hash, // Stores full image URL as HASH
+                            filename: m.filename,
+                            url: imageURL,
+                            thumb: m.thumbdata
+                        }).save();
+                        obj = { status: 'ok', filename: m.filename, thumb: m.thumb };
+                        resolve(obj);
+                    } catch (e) {
+                        // Dupe image, get data from database
+                        const image = await imageModel.findOne({ 'hash': hash });
+                        obj = { status: 'ok', filename: image.filename, thumb: image.thumb };
+                        resolve(obj);
+                    }
+                });
+
+                child.on('exit', async function (m) {
+                });
             }
         )
-        child.on('message', async function (m) {
-            // Receive results from child process
-            // console.log('Filename: ' + m.filename);
-            // console.log('Thumbnail: ' + m.thumbnail);
-            const hash = crypto.createHmac('sha512', imageURL).digest('hex');
-            // console.log(hash)
-            try {
-                await new imageModel({
-                    hash: hash, // Stores full image URL as HASH
-                    filename: m.filename,
-                    url: imageURL,
-                    thumb: m.thumbdata
-                }).save();
-                callback({ status: 'ok', filename: m.filename, thumb: m.thumb });
-            } catch (e) {
-                // Dupe image, get data from database
-                const image = await imageModel.findOne({ 'hash': hash });
-                callback({ status: 'ok', filename: image.filename, thumb: image.thumb });
-            }
-        });
+        console.log("File: ", execution['filename'])
+        return execution;
     }
+
 }

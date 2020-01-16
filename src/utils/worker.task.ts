@@ -48,18 +48,23 @@ export class WorkerTask {
     }
 
     private async redimensionar(filename: string) {
-        const fs = require('fs-extra');
-        const resizeImg = require('resize-img');
-        const thumb = filename.split('.')[0] + '_thumb.' + filename.split('.')[1];
-        let img = await fs.readFile(filename);
-        let buf = await resizeImg(img, {
-            width: 100
-        });
-        // await fs.writeFile(thumb, buf);
-        return {
-            filename: filename.split('/')[filename.split('/').length - 1],
-            thumbnail: thumb.split('/')[thumb.split('/').length - 1],
-            thumbdata: Buffer.from(buf).toString('base64')
-        };
+        try {
+            const fs = require('fs-extra');
+            const resizeImg = require('resize-img');
+            const thumb = filename.split('.')[0] + '_thumb.' + filename.split('.')[1];
+            let img = await fs.readFile(filename);
+            let buf = await resizeImg(img, {
+                width: 100
+            });
+            // await fs.writeFile(thumb, buf);
+            return {
+                filename: filename.split('/')[filename.split('/').length - 1],
+                thumbnail: thumb.split('/')[thumb.split('/').length - 1],
+                thumbdata: Buffer.from(buf).toString('base64')
+            };
+        } catch (e) {
+            console.log(filename);
+            console.log(e);
+        }
     }
 }

@@ -4,11 +4,12 @@ import { HealthCheckerService } from './server/health-checker/health-checker.ser
 import { HealthCheckerController } from './server/health-checker/health-checker.controller';
 import { ImageModule } from './module/image/image.module';
 import { LogModule } from './module/log/log.module';
+import { AppGateway } from './module/log/log.gateway';
 
 @Module({
-    imports: [ImageModule, LogModule],
+    imports: [ImageModule],
     controllers: [HealthCheckerController],
-    providers: [HealthCheckerService],
+    providers: [HealthCheckerService, AppGateway],
 })
 export class AppModule {
     configure(consumer: MiddlewareConsumer): void {
