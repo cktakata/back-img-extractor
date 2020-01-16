@@ -2,8 +2,9 @@ import { model, Schema } from "mongoose";
 
 const ImageSchema = new Schema(
   {
-    filename: { type: String, required: true, index: true, unique: true },
-    url: { type: String, required: true, index: true, unique: true },
+    hash: { type: String, required: true, index: true, unique: true },
+    filename: { type: String, required: true },
+    url: { type: String, required: true },
     data_criacao: { type: Date, default: Date.now },
     thumb: { type: String }
   },
@@ -23,7 +24,7 @@ ImageSchema.pre("save", next => {
 
 ImageSchema.post('save', function (error, doc, next) {
   if (error.name === 'MongoError' && error.code === 11000) {
-    console.log('Imagem duplicada');
+    // console.log('Imagem duplicada');
     next();
   } else {
     next(error);

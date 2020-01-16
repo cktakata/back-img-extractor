@@ -1,22 +1,15 @@
-import { NotFoundException, HttpStatus, Injectable } from '@nestjs/common';
-import { IsString } from 'class-validator';
+import { Injectable } from '@nestjs/common';
 import { imageModel } from '../model/imageSchema';
-import { JwtService } from '@nestjs/jwt';
 import * as crypto from "crypto";
-import * as moment from "moment";
 import { fork } from 'child_process';
-import { Scraper } from 'image-scraper';
 
 @Injectable()
 export class ImageService {
 
-    private jwtService: JwtService;
-
-    constructor(jwtService: JwtService) {
-        this.jwtService = jwtService;
+    constructor() {
     }
 
-    public async getAllImages(URL: string) {
+    public async getAllImages(URL: string): Promise<any> {
         try {
             const puppeteer = require('puppeteer');
             const browser = await puppeteer.launch({ headless: true });
@@ -27,18 +20,21 @@ export class ImageService {
             const images = await page.evaluate(() => Array.from(document.images, e => e.src));
             await browser.close();
             console.log("Found " + images.length + " images");
-            images.forEach(img => {
-                this.saveImage(img, async (rtn: { status: string }) => {
-                    console.log(rtn)
+            const data = [];
+            for (const img of images) {
+                await this.saveImage(img, async (rtn: { status: string, filename: string, thumb: string }) => {
+                    // Here we will broadcast thumbnail using sockets 
+                    console.log(rtn.filename);
+                    data.push(rtn.filename);
                 });
-            })
+            }
             return { status: 'ok' };
         } catch (e) {
             return { status: e.errmsg };
         }
     }
 
-    public async saveImage(imageURL: string, callback: Function) {
+    public async saveImage(imageURL: string, callback: Function): Promise<any> {
         const child = fork(
             __dirname + '../../../utils/fork.task.ts'
             , [imageURL]
@@ -48,19 +44,22 @@ export class ImageService {
         )
         child.on('message', async function (m) {
             // Receive results from child process
-            console.log('Filename: ' + m.filename);
-            console.log('Thumbnail: ' + m.thumbnail);
+            // console.log('Filename: ' + m.filename);
+            // console.log('Thumbnail: ' + m.thumbnail);
+            const hash = crypto.createHmac('sha512', imageURL).digest('hex');
+            // console.log(hash)
             try {
-                const image = await new imageModel({
+                await new imageModel({
+                    hash: hash, // Stores full image URL as HASH
                     filename: m.filename,
                     url: imageURL,
                     thumb: m.thumbdata
                 }).save();
-                callback({ status: 'ok' });
+                callback({ status: 'ok', filename: m.filename, thumb: m.thumb });
             } catch (e) {
-                console.log(e.errmsg)
-                callback({ status: e.errmsg });
-                console.log(e)
+                // Dupe image, get data from database
+                const image = await imageModel.findOne({ 'hash': hash });
+                callback({ status: 'ok', filename: image.filename, thumb: image.thumb });
             }
         });
     }

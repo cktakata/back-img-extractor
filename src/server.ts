@@ -3,6 +3,7 @@ import * as fs from 'fs';
 import * as cors from 'cors';
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
+import { join } from 'path';
 
 export class server {
 
@@ -11,8 +12,9 @@ export class server {
 
     constructor() {
         process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
+        process.env.NODE_NO_WARNINGS = "1";
         process.env.LOCAL = 'true';
-        this.PORT = Number(process.env.PORT) || 8083;
+        this.PORT = Number(process.env.PORT) || 8080;
         this.DBURI = `mongodb://localhost:27017/imgdb`
         this.config();
     }
@@ -20,6 +22,7 @@ export class server {
     private async config() {
         const app = await NestFactory.create(AppModule);
         app.setGlobalPrefix('image');
+        app.useStaticAssets(join(__dirname, '..', 'static'));
         await app.init();
         app.use(cors({
             origin: '*',

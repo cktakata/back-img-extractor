@@ -1,7 +1,7 @@
 import { Module } from '@nestjs/common';
-import { LogGateway } from './log.gateway';
+import { AppGateway } from './log.gateway';
 
 @Module({
-    providers: [LogGateway]
+    providers: [AppGateway]
 })
 export class LogModule { }

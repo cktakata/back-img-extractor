@@ -23,6 +23,7 @@
     "@nestjs/common": "5.0.1",
     "@nestjs/core": "5.0.1",
     "@nestjs/jwt": "6.1.1",
+    "@nestjs/platform-socket.io": "^6.10.14",
     "@nestjs/websockets": "^6.10.14",
     "@types/node": "^7.0.5",
     "axios": "^0.19.1",

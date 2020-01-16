@@ -14,6 +14,7 @@ export class ImageController {
     public async scrap(@Res() res: Response, @Body() body: BodyArgs): Promise<Response> {
         let data;
         try {
+            console.log(body)
             data = await this.service.getAllImages(body.url);
             console.log('Controller: ', data)
             if (data.status === 'ok') {
