@@ -3,6 +3,9 @@ Projeto de implementação de extração de imagens, usando as seguintes bibliot
 - NestJS;
 - puppeteer;
 - Mongoose;
+- image-downloader;
+- resize-img;
+
 ## Instalação
 ```npm i```
 ## Uso
