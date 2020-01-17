@@ -1,12 +1,20 @@
 # Extrator de imagens
-Projeto de implementação de cadastro de usuários, usando as seguintes bibliotecas:
+Projeto de implementação de extração de imagens, usando as seguintes bibliotecas:
 - NestJS;
-- JWT;
+- puppeteer;
 - Mongoose;
 ## Instalação
 ```npm i```
 ## Uso
-A ser desenvolvido
+Utilizar via chamada websocket
+
+=> Mensagem:
+msgToServer
+
+=> Payload:
+{
+    "url":"https://www.google.com"
+}
 
 ### Iniciar a aplicação no modo desenvolvimento (nodemon)
 ```npm run dev```
@@ -20,13 +28,9 @@ A ser desenvolvido
 ### Coverage report
 ```/coverage/lcov-report/index.html```
 
-### Endpoints
+### Observações
 
-```http://localhost:8080/cad-user/health``` => HealthCheck
-
-```http://localhost:8080/cad-user/cadastro/signup``` => Criar novo usuário
-
-```http://localhost:8080/cad-user/cadastro/signin``` => Logar
-
-```http://localhost:8080/cad-user/cadastro/search/:id``` => Busca de usuário
-
+Testado com o site do google e o terra; Em ambos a extração é bem sucedida;
+Existe a ressalva da biblioteca não conseguir redimensionar arquivos .gif;
+As imagens originais são gravadas na pasta /utils/images;
+O banco de dados armazena o thumbnail, com a largura fixa de 100px;
