@@ -34,6 +34,10 @@ describe('Image Service', () => {
             expect(await service.getAllImages('')).toBeTruthy();
         });
 
+        it('should test saveImage', async () => {
+            expect(await service.saveImage('')).toBeTruthy();
+        });
+
     })
 
 })

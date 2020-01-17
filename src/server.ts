@@ -1,14 +1,7 @@
 import * as mongoose from 'mongoose';
-import * as fs from 'fs';
 import * as cors from 'cors';
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
-import { join } from 'path';
-
-// var express = require('express');
-// var app = express();
-// var wss = app.listen(8081)
-// var io = require('socket.io').listen(wss);
 
 export class server {
 
@@ -27,7 +20,6 @@ export class server {
     private async config() {
         const app = await NestFactory.create(AppModule);
         app.setGlobalPrefix('image');
-        // app.useStaticAssets(join(__dirname, '..', 'static'));
         await app.init();
 
         app.use(cors({

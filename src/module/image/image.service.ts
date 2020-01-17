@@ -2,7 +2,6 @@ import { Injectable } from '@nestjs/common';
 import { imageModel } from '../model/imageSchema';
 import * as crypto from "crypto";
 import { fork } from 'child_process';
-const util = require('util');
 
 @Injectable()
 export class ImageService {
