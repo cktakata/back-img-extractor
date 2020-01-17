@@ -9,12 +9,14 @@ Projeto de implementação de extração de imagens, usando as seguintes bibliot
 Utilizar via chamada websocket
 
 => Mensagem:
-msgToServer
+```msgToServer```
 
 => Payload:
+```
 {
     "url":"https://www.google.com"
 }
+```
 
 ### Iniciar a aplicação no modo desenvolvimento (nodemon)
 ```npm run dev```
@@ -30,7 +32,7 @@ msgToServer
 
 ### Observações
 
-Testado com o site do google e o terra; Em ambos a extração é bem sucedida;
-Existe a ressalva da biblioteca não conseguir redimensionar arquivos .gif;
-As imagens originais são gravadas na pasta /utils/images;
-O banco de dados armazena o thumbnail, com a largura fixa de 100px;
+- Testado com o site do google e o terra; Em ambos a extração é bem sucedida;
+- Existe a ressalva da biblioteca não conseguir redimensionar arquivos .gif;
+- As imagens originais são gravadas na pasta /utils/images;
+- O banco de dados armazena o thumbnail, com a largura fixa de 100px;
